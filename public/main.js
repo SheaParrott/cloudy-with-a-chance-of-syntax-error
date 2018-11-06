@@ -2,7 +2,7 @@ let searchText = ''
 
 const addTempToDiv = weatherData => {
   // Find the Div
-  let theDiv = document.querySelector('div')
+  let theDiv = document.querySelector('.displayedElements')
 
   // Create a new p
   let newP = document.createElement('p')
@@ -17,7 +17,7 @@ const addTempToDiv = weatherData => {
 }
 
 const addHumidityToDiv = weatherData => {
-  let theDiv = document.querySelector('div')
+  let theDiv = document.querySelector('.displayedElements')
   let newP = document.createElement('p')
 
   newP.textContent = `${weatherData.main.humidity}%`
@@ -26,7 +26,7 @@ const addHumidityToDiv = weatherData => {
   newP.classList.add('mediumFont')
 }
 const addForecastToDiv = weatherData => {
-  let theDiv = document.querySelector('div')
+  let theDiv = document.querySelector('.displayedElements')
   let newP = document.createElement('p')
 
   newP.textContent = `${weatherData.weather[0].description}`
@@ -36,7 +36,7 @@ const addForecastToDiv = weatherData => {
 }
 
 const addTempMaxToDiv = weatherData => {
-  let theDiv = document.querySelector('div')
+  let theDiv = document.querySelector('.displayedElements')
   let newP = document.createElement('p')
 
   newP.textContent = `Max: ${weatherData.main.temp_max}°`
@@ -45,7 +45,7 @@ const addTempMaxToDiv = weatherData => {
   newP.classList.add('mediumFont')
 }
 const addTempMinToDiv = weatherData => {
-  let theDiv = document.querySelector('div')
+  let theDiv = document.querySelector('.displayedElements')
   let newP = document.createElement('p')
 
   newP.textContent = `Min: ${weatherData.main.temp_min}°`
@@ -57,7 +57,7 @@ let restartButtonFunction = () => {
   window.location.reload(true)
 }
 let SearchButtonFunction = () => {
-  searchText = document.getElementById('searchTxt').value
+  searchText = document.getElementById('cityID').value
 
   fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${searchText}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
@@ -74,10 +74,30 @@ let SearchButtonFunction = () => {
       // console.log(weatherData.main.temp)
     })
 }
+let SearchByZipButtonFunction = () => {
+  searchText = document.getElementById('zipID').value
+
+  fetch(
+    `https://api.openweathermap.org/data/2.5/weather?zip=${searchText}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
+  )
+    .then(response => {
+      return response.json()
+    })
+    .then(weatherData => {
+      addTempToDiv(weatherData)
+      addHumidityToDiv(weatherData)
+      addForecastToDiv(weatherData)
+      addTempMaxToDiv(weatherData)
+      addTempMinToDiv(weatherData)
+      // console.log(weatherData.main.temp)
+    })
+}
 
 const main = () => {
-  let searchButton = document.querySelector('button')
+  let searchButton = document.querySelector('.citySearch')
   searchButton.addEventListener('click', SearchButtonFunction)
+  let searchByZipButton = document.querySelector('.zipSearch')
+  searchByZipButton.addEventListener('click', SearchByZipButtonFunction)
   let reloadButton = document.querySelector('.reload')
   reloadButton.addEventListener('click', restartButtonFunction)
 }
