@@ -57,8 +57,8 @@ let restartButtonFunction = () => {
   window.location.reload(true)
 }
 let SearchButtonFunction = () => {
-  // searchText = document.getElementById('searchTxt').value
-  searchText = 'Tampa'
+  searchText = document.getElementById('searchTxt').value
+
   fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${searchText}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
   )
@@ -71,7 +71,7 @@ let SearchButtonFunction = () => {
       addForecastToDiv(weatherData)
       addTempMaxToDiv(weatherData)
       addTempMinToDiv(weatherData)
-      console.log(weatherData.main.temp)
+      // console.log(weatherData.main.temp)
     })
 }
 
