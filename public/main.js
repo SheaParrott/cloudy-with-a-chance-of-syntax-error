@@ -1,116 +1,111 @@
-let searchText = ''
+class DisplayData {
+  reset() {
+    let theDiv = document.querySelector('.displayedElements')
+    // zap all the content frmo that div
+    theDiv.innerHTML = ''
 
-const addTempToDiv = weatherData => {
-  // Find the Div
-  let theDiv = document.querySelector('.displayedElements')
+    document.getElementById('zipID').value = ''
+    document.getElementById('cityID').value = ''
+  }
 
-  // Create a new p
-  let newP = document.createElement('p')
+  zipcode() {
+    return document.getElementById('zipID').value
+  }
+  cityLoctation() {
+    return document.getElementById('cityID').value
+  }
 
-  // make the text content of the P the weather data
-  // not an array, this is a number without the brackets
-  // so pDivl data like this
-  newP.textContent = `${weatherData.main.temp}°`
+  addDataToInterface(data, className) {
+    let theDiv = document.querySelector('.displayedElements')
+    let newP = document.createElement('p')
 
-  // add the P to the Div
-  theDiv.appendChild(newP)
+    if (className !== '') {
+      newP.classList.add(className)
+    }
+
+    newP.textContent = data
+
+    theDiv.appendChild(newP)
+  }
 }
 
-const addHumidityToDiv = weatherData => {
-  let theDiv = document.querySelector('.displayedElements')
-  let newP = document.createElement('p')
+class WeatherData {
+  getWeatherForZip(zipCode) {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
+    )
+      .then(response => {
+        return response.json()
+      })
+      .then(weatherData => {
+        const temp = weatherData.main.temp
+        const humidity = weatherData.main.humidity
+        const forecast = weatherData.weather[0].description
+        const maxTemp = weatherData.main.temp_max
+        const minTemp = weatherData.main.temp_min
 
-  newP.textContent = `${weatherData.main.humidity}%`
+        let displayData = new DisplayData()
+        displayData.addDataToInterface(`${temp}°`, 'largeFont')
+        displayData.addDataToInterface(forecast, '')
+        displayData.addDataToInterface(`RH: ${humidity}%`, '')
+        displayData.addDataToInterface(`Max: ${maxTemp}°`, '')
+        displayData.addDataToInterface(`Min: ${minTemp}°`, '')
+      })
+  }
+  getWeatherForLocation(location) {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
+    )
+      .then(response => {
+        return response.json()
+      })
+      .then(weatherData => {
+        const temp = weatherData.main.temp
+        const humidity = weatherData.main.humidity
+        const forecast = weatherData.weather[0].description
+        const maxTemp = weatherData.main.temp_max
+        const minTemp = weatherData.main.temp_min
 
-  theDiv.appendChild(newP)
-  newP.classList.add('mediumFont')
+        let displayData = new DisplayData()
+        displayData.addDataToInterface(temp, 'largeFont')
+        displayData.addDataToInterface(humidity, '')
+        displayData.addDataToInterface(forecast, '')
+        displayData.addDataToInterface(maxTemp, '')
+        displayData.addDataToInterface(minTemp, '')
+      })
+  }
 }
-const addForecastToDiv = weatherData => {
-  let theDiv = document.querySelector('.displayedElements')
-  let newP = document.createElement('p')
 
-  newP.textContent = `${weatherData.weather[0].description}`
-
-  theDiv.appendChild(newP)
-  newP.classList.add('mediumFont')
-}
-
-const addTempMaxToDiv = weatherData => {
-  let theDiv = document.querySelector('.displayedElements')
-  let newP = document.createElement('p')
-
-  newP.textContent = `Max: ${weatherData.main.temp_max}°`
-
-  theDiv.appendChild(newP)
-  newP.classList.add('mediumFont')
-}
-const addTempMinToDiv = weatherData => {
-  let theDiv = document.querySelector('.displayedElements')
-  let newP = document.createElement('p')
-
-  newP.textContent = `Min: ${weatherData.main.temp_min}°`
-
-  theDiv.appendChild(newP)
-  newP.classList.add('mediumFont')
-}
 let restartButtonFunction = () => {
-  window.location.reload(true)
+  let displayData = new DisplayData()
+  displayData.reset()
 }
+
 let SearchButtonFunction = () => {
-  searchText = document.getElementById('cityID').value
+  let displayData = new DisplayData()
+  let searchText = displayData.cityLoctation()
 
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${searchText}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
-  )
-    .then(response => {
-      return response.json()
-    })
-    .then(weatherData => {
-      addTempToDiv(weatherData)
-      addHumidityToDiv(weatherData)
-      addForecastToDiv(weatherData)
-      addTempMaxToDiv(weatherData)
-      addTempMinToDiv(weatherData)
-      // console.log(weatherData.main.temp)
-    })
+  let weatherData = new WeatherData()
+  weatherData.getWeatherForLocation(searchText)
 }
-let SearchByZipButtonFunction = () => {
-  searchText = document.getElementById('zipID').value
 
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?zip=${searchText}&appid=331443de8011d520ea2d97aad9cea963&units=imperial`
-  )
-    .then(response => {
-      return response.json()
-    })
-    .then(weatherData => {
-      addTempToDiv(weatherData)
-      addHumidityToDiv(weatherData)
-      addForecastToDiv(weatherData)
-      addTempMaxToDiv(weatherData)
-      addTempMinToDiv(weatherData)
-      // console.log(weatherData.main.temp)
-    })
+let SearchByZipButtonFunction = () => {
+  let displayData = new DisplayData()
+  let searchText = displayData.zipcode()
+
+  let weatherData = new WeatherData()
+  weatherData.getWeatherForZip(searchText)
 }
 
 const main = () => {
   let searchButton = document.querySelector('.citySearch')
   searchButton.addEventListener('click', SearchButtonFunction)
+
   let searchByZipButton = document.querySelector('.zipSearch')
   searchByZipButton.addEventListener('click', SearchByZipButtonFunction)
+
   let reloadButton = document.querySelector('.reload')
   reloadButton.addEventListener('click', restartButtonFunction)
 }
 
 document.addEventListener('DOMContentLoaded', main)
-
-//
-// x create search button function to record input
-// x attach input to url
-//
-//
-// - find Div
-//   - create li
-//   - display weather info per li
-//    - find content wanted to be displayed
-//

@@ -9,31 +9,33 @@
 </head>
 
 <body>
+
   <header>
     <h1>Weather</h1>
   </header>
-  <main>
-    <div>
-      <label for="city">Location</label>
-      <input class="cityBox" name="city" type="text" id="cityID">
-      <button class="citySearch">SEARCH</button>
+  <section>
+    <main>
+      <div>
+        <label for="cityID">LOCATION:</label>
+        <input class="cityBox" type="text" id="cityID">
+        <button class="citySearch">SEARCH</button>
+      </div>
+      <div>
+        <label for="zipID">ZIP CODE: &nbsp</label>
+        <input class="zipBox" type="text" id="zipID">
+        <button class="zipSearch">SEARCH</button>
+      </div>
+      <div>
+        <button class="reload">RELOAD</button>
+      </div>
+    </main>
+
+    <div class="displayedElements">
+
     </div>
-    <div>
-      <label for="zip">Zip Code</label>
-      <input class="zipBox" name="zip" type="text" id="zipID">
-      <button class="zipSearch">SEARCH</button>
-    </div>
-    <div>
-      <button class="reload">RELOAD</button>
-    </div>
-  </main>
-
-  <div class="displayedElements">
-
-  </div>
 
 
-
+  </section>
   <script src="/main.js" charset="utf-8"></script>
 </body>
 
