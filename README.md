@@ -1,5 +1,5 @@
  <strong>Summary</strong><br/>
-In this assignment we were instructed to create create a weather app using a weather API.   
+In this assignment we were instructed to refactor the weather app using class in javascript.   
 
 <strong>Things learned</strong><br/>
 Class within  javascript<br/>
